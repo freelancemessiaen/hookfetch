@@ -1,34 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useFetchRecipes } from './hooks/useFetchRecipes';
+
 function App() {
-  const [recipes, SetRecipes] = useState([]);
-  const [isloading, SetIsLoading] = useState(true);
-  const [error, SetError] = useState(null);
-
-  useEffect(() => {
-    async function fetRecipes(){
-      try {
-        const response = await fetch('https://restapi.fr/api/recipes')
-        if (response.ok) {
-        const newRecipes = await response.json();
-        SetRecipes(Array.isArray(newRecipes) ? newRecipes : [newRecipes]);
-      }else {
-        SetError('Erreur');
-      }
-      } catch (error) {
-        SetError('Erreur');
-      }finally{
-        SetIsLoading(false);
-      }
-    }
-    fetRecipes();
-  })
-
-
+  const {recipes, isLoading, error} = useFetchRecipes();
   return (
     <div
       className="d-flex justify-content-center align-items-center"
       style={{ backgroundColor: '#fefefe', height: '100vh', width: '100%' }}>
-        {isloading ? (
+        {isLoading ? (
           <p>Chagement ...</p>
         ): (
           <ul>
@@ -37,6 +16,7 @@ function App() {
             ))}
           </ul>
         )}
+        {error && <p>{error}</p>}
     </div>
   );
 }
